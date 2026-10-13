@@ -2,6 +2,6 @@
 
 int main()
 {
-  printf("hello vim");
+  printf("hello vim\n");
   return 0;
 }
