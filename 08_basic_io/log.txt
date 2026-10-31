@@ -1,12 +1,7 @@
-hello world
-hello world
-hello world
-hello world
-hello world
-hello world
-hello world
-hello world
-hello world
-hello world
-aaaa
-1234
+hello write!
+hello printf
+hello fprintf!
+hello fwrite!
+hello printf
+hello fprintf!
+hello fwrite!

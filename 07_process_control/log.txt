@@ -1,0 +1,12 @@
+total 80
+drwxrwxr-x  2 lzh lzh  4096 Oct 28 22:39 .
+drwxrwxr-x 11 lzh lzh  4096 Oct 25 20:35 ..
+-rw-rw-r--  1 lzh lzh  1155 Oct 21 20:19 code.c
+-rwxrwxr-x  1 lzh lzh  8832 Oct 21 17:24 code.exe
+-rw-rw-r--  1 lzh lzh     0 Oct 28 22:40 log.txt
+-rw-rw-r--  1 lzh lzh   253 Oct 23 19:22 Makefile
+-rw-rw-r--  1 lzh lzh  6925 Oct 28 22:39 myshell.cc
+-rwxrwxr-x  1 lzh lzh 20704 Oct 28 22:39 myshell.exe
+-rw-rw-r--  1 lzh lzh   572 Oct 28 14:26 ownshell.cc
+-rw-rw-r--  1 lzh lzh   211 Oct 22 10:01 proc.c
+-rwxrwxr-x  1 lzh lzh  8456 Oct 21 20:47 proc.exe
