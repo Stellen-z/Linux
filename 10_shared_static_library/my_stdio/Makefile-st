@@ -1,0 +1,21 @@
+libmyc.a:mystdio.o mystrlen.o
+	ar -rc $@ $^
+
+mystdio.o:mystdio.c
+	gcc -c $<
+mystrlen.o:mystrlen.c
+	gcc -c $<
+
+.PHONY:output
+output:
+	mkdir -p lib/include
+	mkdir -p lib/mylib
+	cp -f *.h lib/include
+	cp -f *.a lib/mylib
+	tar -czvf lib.tgz lib 
+
+.PHONY:clean
+clean:
+	rm -rf libmyc.a code *.o lib lib.tgz log.txt 
+
+
