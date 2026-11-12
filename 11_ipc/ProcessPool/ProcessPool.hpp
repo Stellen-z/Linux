@@ -17,12 +17,11 @@ public:
     {
         _name = "channel-" + std::to_string(_wfd) + "-" + std::to_string(_subid);
     }
-    
 
     void Send(int code)
     {
-        ssize_t n = write(_wfd, &code,sizeof(code));
-        if(n != sizeof(code)) 
+        ssize_t n = write(_wfd, &code, sizeof(code));
+        if (n != sizeof(code))
             std::cerr << "写入错误" << std::endl;
     }
 
@@ -34,7 +33,7 @@ public:
 
     void Wait()
     {
-        pid_t pid = waitpid(_subid,nullptr,0);
+        pid_t pid = waitpid(_subid, nullptr, 0);
         (void)pid;
     }
 
@@ -56,7 +55,8 @@ class ChannelManger
 {
 public:
     ChannelManger() : _next(0)
-    {}
+    {
+    }
 
     void InsertChannel(int wfd, pid_t subid)
     {
@@ -83,9 +83,17 @@ public:
         }
     }
 
+    void CloseAll()
+    {
+        for (auto &channel : _channels)
+        {
+            channel.Close();
+        }
+    }
+
     void StopProcess()
     {
-        for(auto& channel : _channels)
+        for (auto &channel : _channels)
         {
             channel.Close();
             std::cout << "关闭: " << channel.GetName() << std::endl;
@@ -94,8 +102,19 @@ public:
 
     void WaitProcess()
     {
-        for(auto& channel : _channels)
+        for (auto &channel : _channels)
         {
+            channel.Wait();
+            std::cout << "回收：" << channel.GetName() << std::endl;
+        }
+    }
+
+    void StopAndWait()
+    {
+        for (auto &channel : _channels)
+        {
+            channel.Close();
+            std::cout << "关闭: " << channel.GetName() << std::endl;
             channel.Wait();
             std::cout << "回收：" << channel.GetName() << std::endl;
         }
@@ -172,6 +191,11 @@ public:
                 // child
                 close(pipefd[1]);
 
+                // 创建子进程时关闭其他兄弟的写端
+                // 由于写时拷贝，不会关闭父进程对应当前子进程的写端，子进程关掉的是自己的写端
+                _cn.CloseAll();
+
+
                 Work(pipefd[0], subid);
                 close(pipefd[0]);
                 exit(1);
@@ -196,7 +220,7 @@ public:
         int taskcode = _tm.RandTaskCode();
 
         // 2.选择一个信道，均衡负载的选择一个子进程
-        auto &chl = _cn.Select();   
+        auto &chl = _cn.Select();
         std::cout << "选择了一个子进程：" << chl.GetName() << std::endl;
 
         // 2.派发任务
@@ -207,10 +231,12 @@ public:
     void ShutDown()
     {
         // 1.关闭所有子进程
-        _cn.StopProcess();
+        // _cn.StopProcess();
 
         // 2.回收所有子进程
-        _cn.WaitProcess();
+        // _cn.WaitProcess();
+
+        _cn.StopAndWait();
     }
 
     ~ProcessPool() {}
