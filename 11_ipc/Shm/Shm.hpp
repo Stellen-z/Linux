@@ -3,19 +3,14 @@
 #include <sys/shm.h>
 #include <sys/ipc.h>
 #include <unistd.h>
+#include "Comm.hpp"
 
 #define CREATER "creater"
 #define USER "user"
 
-#define ERR_EXIT(m)         \
-    do                      \
-    {                       \
-        perror(m);          \
-        exit(EXIT_FAILURE); \
-    } while (0)
 
 const int gdefaultid = -1;
-const std::string path = "./";
+const std::string path = ".";
 const int projectid = 0x66;
 const int gsize = 4096;
 const int perms = 0666;
@@ -45,12 +40,12 @@ private:
     void Attach()
     {
         // 检查_shmid
-        if(_shmid == gdefaultid)
+        if (_shmid == gdefaultid)
             ERR_EXIT("_shmid");
-            
+
         _strat_addr = shmat(_shmid, nullptr, 0);
-        // 64位指针8字节，用long long 强转q
-        if (_strat_addr == (void*)-1)
+        // 64位指针8字节，用long long 强转
+        if (_strat_addr == (void *)-1)
         {
             ERR_EXIT("shmat");
         }
@@ -67,7 +62,7 @@ private:
             ERR_EXIT("shmctl");
             return;
         }
-        std::cout << "shm deleted success" << std::endl;
+        std::cout << "shm deleted success!" << std::endl;
     }
 
 public:
@@ -100,10 +95,21 @@ public:
         return _strat_addr;
     }
 
-    int GetSize() {return _size;}
+    int GetSize() { return _size; }
+
+    void Detach()
+    {
+        if(_strat_addr == nullptr) return;
+        int n = shmdt(_strat_addr);
+        if (n == 0)
+            printf("shmdt success!\n");
+        else
+            printf("shmdt error!\n");
+    }
 
     ~Shm()
     {
+        Detach();
         if (_usertype == CREATER)
             Destroy();
     }
