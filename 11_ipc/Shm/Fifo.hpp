@@ -29,7 +29,7 @@ public:
 
     void OpenForRead()
     {
-        // 2.以只读方式管道文件
+        // 2.以只读方式打开管道文件
         _rfd = open(_fifoname.c_str(), O_RDONLY);
         if (_rfd == -1)
             ERR_EXIT("open");
@@ -79,12 +79,12 @@ public:
 
     ~NameFifo()
     {
-        // 1.关闭文件
-        CloseWrite();
-        CloseRead();
-
-        // 2.删除管道文件
-        unlink(_fifoname.c_str());
+        // 引用计数判断是否真的unlink
+        int n = unlink(_fifoname.c_str());
+        if(n == 0)
+            std::cout << "remove success!" << std::endl;
+        else 
+            std::cout << "remove failed!" << std::endl;
     }
 
 private:

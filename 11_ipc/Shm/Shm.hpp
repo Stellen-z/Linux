@@ -97,6 +97,15 @@ public:
 
     int GetSize() { return _size; }
 
+    void ShmInfo()
+    {
+        struct shmid_ds ds;
+        shmctl(_shmid,IPC_STAT,&ds);
+        printf("shm_segsz: %ld\n",ds.shm_segsz);
+        printf("key: 0x%d\n",ds.shm_perm.__key);
+        printf("shm_nattch: %ld\n",ds.shm_nattch);
+    }
+
     void Detach()
     {
         if(_strat_addr == nullptr) return;

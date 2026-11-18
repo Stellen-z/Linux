@@ -8,6 +8,8 @@ int main()
 
     Shm shm(path, projectid, CREATER);
 
+    // shm.ShmInfo();
+
     reader.OpenForRead();
 
     char *mem = (char *)shm.GetShmAddr();
