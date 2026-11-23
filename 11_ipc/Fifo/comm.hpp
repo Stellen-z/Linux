@@ -116,6 +116,7 @@ public:
         CloseWrite();
         CloseRead();
 
+        // 引用计数判断是否真的unlink
         // 2.删除管道文件
         unlink(_fifoname.c_str());
     }
